@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Pin the toolchain used during development so clippy/rustfmt results
+      # are reproducible. Bump this together with rust-version in Cargo.toml.
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.97.1
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Unit tests
+        run: cargo test --lib
+
+      - name: Release build
+        run: cargo build --release
+
+      # The dual-netns end-to-end suite is intentionally not run here: it
+      # needs unprivileged user+net namespaces (and ping/nsenter). Run it
+      # locally with:
+      #   cargo test --test netns -- --nocapture

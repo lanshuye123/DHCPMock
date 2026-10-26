@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lanshuye123/DHCPMock/main/docs/lease-snapshot.schema.json",
+  "title": "dhcp-mock lease snapshot",
+  "description": "JSON snapshot written by `dhcp-mock --lease-file PATH` (schema_version 1). The same document is printed on SIGUSR1 when no --lease-file is configured.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "iface",
+    "ifindex",
+    "server_ip",
+    "prefix",
+    "network",
+    "broadcast",
+    "pool_start",
+    "pool_end",
+    "lease_seconds",
+    "uptime_seconds",
+    "generated_at_unix",
+    "leases",
+    "declined",
+    "counters"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "iface": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 15,
+      "description": "Linux interface name."
+    },
+    "ifindex": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "server_ip": {
+      "$ref": "#/$defs/ipv4"
+    },
+    "prefix": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "network": {
+      "$ref": "#/$defs/ipv4"
+    },
+    "broadcast": {
+      "$ref": "#/$defs/ipv4"
+    },
+    "pool_start": {
+      "$ref": "#/$defs/ipv4"
+    },
+    "pool_end": {
+      "$ref": "#/$defs/ipv4"
+    },
+    "lease_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "uptime_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generated_at_unix": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Wall-clock generation time (Unix seconds)."
+    },
+    "leases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lease"
+      }
+    },
+    "declined": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/declined"
+      }
+    },
+    "counters": {
+      "$ref": "#/$defs/counters"
+    }
+  },
+  "$defs": {
+    "ipv4": {
+      "type": "string",
+      "format": "ipv4",
+      "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$"
+    },
+    "mac": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$"
+    },
+    "lease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mac",
+        "ip",
+        "state",
+        "expires_in_secs"
+      ],
+      "properties": {
+        "mac": {
+          "$ref": "#/$defs/mac"
+        },
+        "ip": {
+          "$ref": "#/$defs/ipv4"
+        },
+        "state": {
+          "enum": [
+            "offered",
+            "bound"
+          ]
+        },
+        "expires_in_secs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Remaining lease time from the monotonic clock."
+        }
+      }
+    },
+    "declined": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ip",
+        "cooldown_secs"
+      ],
+      "properties": {
+        "ip": {
+          "$ref": "#/$defs/ipv4"
+        },
+        "cooldown_secs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "received",
+        "discover",
+        "offer",
+        "request",
+        "ack",
+        "nak",
+        "release",
+        "decline",
+        "inform",
+        "dropped",
+        "parse_errors",
+        "send_errors",
+        "sent"
+      ],
+      "properties": {
+        "received": { "type": "integer", "minimum": 0 },
+        "discover": { "type": "integer", "minimum": 0 },
+        "offer": { "type": "integer", "minimum": 0 },
+        "request": { "type": "integer", "minimum": 0 },
+        "ack": { "type": "integer", "minimum": 0 },
+        "nak": { "type": "integer", "minimum": 0 },
+        "release": { "type": "integer", "minimum": 0 },
+        "decline": { "type": "integer", "minimum": 0 },
+        "inform": { "type": "integer", "minimum": 0 },
+        "dropped": { "type": "integer", "minimum": 0 },
+        "parse_errors": { "type": "integer", "minimum": 0 },
+        "send_errors": { "type": "integer", "minimum": 0 },
+        "sent": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

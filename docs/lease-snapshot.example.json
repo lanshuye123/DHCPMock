@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "iface": "eth1",
+  "ifindex": 3,
+  "server_ip": "10.99.99.1",
+  "prefix": 24,
+  "network": "10.99.99.0",
+  "broadcast": "10.99.99.255",
+  "pool_start": "10.99.99.2",
+  "pool_end": "10.99.99.254",
+  "lease_seconds": 43200,
+  "uptime_seconds": 42,
+  "generated_at_unix": 1793000042,
+  "leases": [
+    {
+      "mac": "aa:bb:cc:dd:ee:ff",
+      "ip": "10.99.99.100",
+      "state": "bound",
+      "expires_in_secs": 43158
+    }
+  ],
+  "declined": [
+    {
+      "ip": "10.99.99.101",
+      "cooldown_secs": 240
+    }
+  ],
+  "counters": {
+    "received": 5,
+    "discover": 2,
+    "offer": 2,
+    "request": 1,
+    "ack": 1,
+    "nak": 0,
+    "release": 0,
+    "decline": 1,
+    "inform": 0,
+    "dropped": 0,
+    "parse_errors": 0,
+    "send_errors": 0,
+    "sent": 3
+  }
+}
